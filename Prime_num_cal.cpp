@@ -63,10 +63,14 @@ void find_primes(int start, int end, std::vector<int>& list) {
 int main(int argc, char *argv[]) {
     // Obtaining user input from command line
     if (argc != 2) {
-        std::cerr << "Please enter number\n " << std::endl;
+        std::cerr << "Please enter number after command line.\n " << std::endl;
         return 1;
     }
     int max = std::stoi(argv[1]);
+    if (max <2) {
+        std::cerr << "There is no prime number less than 2." << std::endl;
+        return 1;
+    }
     
     // Obtain number of availble threads
     int num_threads = std::thread::hardware_concurrency();
@@ -74,6 +78,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Not enough cores\n";
         return 1;
     }
+    std::cout << "The number of threads: " << num_threads <<std::endl;
 
     // Allocate a chunk of number to each thread to work
     int chunk_size = max / num_threads;
@@ -89,6 +94,7 @@ int main(int argc, char *argv[]) {
             end = max;
         }
         threads[i] = std::thread(find_primes, start, end, std::ref(prime_arrays[i]));
+        std::cout << "Thread(" << i+1 << ") assigned number from " << start << " to " << end << std::endl;
     }
 
     // Thread working
